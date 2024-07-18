@@ -1,0 +1,8 @@
+venv/
+ENV/
+env/
+.venv/
+.virtualenv/
+.venv
+*.pyc
+token.txt
