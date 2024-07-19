@@ -1,6 +1,7 @@
 from typing import List, Optional
 import logging
 import requests
+import time
 
 
 class ApisNetPe:
@@ -32,7 +33,8 @@ class ApisNetPe:
         elif response.status_code == 403:
             logging.warning(f"{response.url} - IP blocked")
         elif response.status_code == 429:
-            logging.warning(f"{response.url} - Many requests add delay")
+            time.sleep(int(response.headers["Retry-After"]))
+            #logging.warning(f"{response.url} - Many requests add delay")
         elif response.status_code == 401:
             logging.warning(f"{response.url} - Invalid token or limited")
         else:
