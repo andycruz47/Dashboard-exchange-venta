@@ -66,7 +66,7 @@ def getData(currentYear, currentMonth, lastMonth):
     # Convertir la lista de diccionarios en un DataFrame
     dfCurrentExchanges= pd.DataFrame(currentExchanges)
     # Sleep
-    time.sleep(3)
+    time.sleep(1)
     # Consulta a la API
     lastExchanges = getExchange(currentYear, lastMonth)
     # Convertir la lista de diccionarios en un DataFrame
