@@ -9,9 +9,6 @@ currentYear = datetime.now().year
 currentMonth = datetime.now().month
 lastMonth = currentMonth - 1
 
-print(currentYear)
-print(currentMonth)
-print(lastMonth)
 #df = pd.read_csv('exchangeHistory.csv')
 df = getData(currentYear, currentMonth, lastMonth)
 

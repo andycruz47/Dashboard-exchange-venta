@@ -20,7 +20,7 @@ class ApisNetPe:
 
         headers = {
             #"Authorization": self.token, 
-            "Referer": "https://apis.net.pe/api-tipo-cambio.html"
+            "User-agent": "your bot 0.1"
         }
 
         response = requests.get(url, headers=headers, params=params)
