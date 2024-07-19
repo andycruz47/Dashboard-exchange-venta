@@ -60,10 +60,13 @@ def savetoCSV(exchanges, month, year):
 def getData(currentYear, currentMonth, lastMonth):
     # Leer el archivo CSV en un DataFrame
     df = pd.read_csv('exchangeHistory.csv')
+    # Consulta a la API
     currentExchanges = getExchange(currentYear, currentMonth)
-    lastExchanges = getExchange(currentYear, lastMonth)
     # Convertir la lista de diccionarios en un DataFrame
     dfCurrentExchanges= pd.DataFrame(currentExchanges)
+    # Consulta a la API
+    lastExchanges = getExchange(currentYear, lastMonth)
+    # Convertir la lista de diccionarios en un DataFrame
     dfLastExchanges= pd.DataFrame(lastExchanges)
     dfNewExchanges = pd.concat([dfLastExchanges, dfCurrentExchanges], ignore_index=True)
     #Convertir a fecha la columna Fecha
