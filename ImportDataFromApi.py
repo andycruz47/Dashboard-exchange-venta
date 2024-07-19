@@ -1,6 +1,7 @@
 from apis_net_pe import ApisNetPe
 import pandas as pd
 from datetime import timedelta
+import time
 import csv
 
 
@@ -64,6 +65,8 @@ def getData(currentYear, currentMonth, lastMonth):
     currentExchanges = getExchange(currentYear, currentMonth)
     # Convertir la lista de diccionarios en un DataFrame
     dfCurrentExchanges= pd.DataFrame(currentExchanges)
+    # Sleep
+    time.sleep(60)
     # Consulta a la API
     lastExchanges = getExchange(currentYear, lastMonth)
     # Convertir la lista de diccionarios en un DataFrame
