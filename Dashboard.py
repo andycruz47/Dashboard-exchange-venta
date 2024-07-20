@@ -34,7 +34,8 @@ months = df['Mes'].unique()
 nameMonthsFiltred = [nameMonths[m] for m in months]
 
 # Definir los valores predeterminados para los filtros
-defaultMonthsSelected = [nameMonths[currentMonth], nameMonths[lastMonth]]
+#defaultMonthsSelected = [nameMonths[currentMonth], nameMonths[lastMonth]]
+defaultMonthsSelected = [nameMonths[currentMonth]]
 
 yearSelected = st.selectbox('Selecciona un año:', sorted(years), index=list(years).index(currentYear))
 monthsNameSelected = st.multiselect('Selecciona meses:', nameMonthsFiltred, default=defaultMonthsSelected)
@@ -44,20 +45,21 @@ monthsSelected = [list(nameMonths.keys())[list(nameMonths.values()).index(m)] fo
 df_filtrado = df[(df['Año'] == yearSelected) & (df['Mes'].isin(monthsSelected))]
 
 # Crear el gráfico de líneas
-fig = px.line(df_filtrado, x='Fecha', y='Venta', title='Tipo Cambio USD', labels={'Fecha': 'Fecha', 'Venta': 'Exchange'}, markers=True)
+fig = px.line(df_filtrado, x='Fecha', y='Venta', title='Tipo Cambio USD', labels={'Fecha':'Fecha','Venta':'Exchange'}, markers=True, text='Venta', hover_data={'Fecha':True, 'Venta':False})
 
 # Customizar el gráfico con un tema claro
 fig.update_layout(
     template='plotly_white',
     title_font=dict(size=20, family="Arial"),
-    font=dict(size=20, color='#262730')
+    font=dict(size=10, color='black'),
+    xaxis=dict(title=None, tickfont=dict(color='black')),
+    yaxis=dict(title=None, tickfont=dict(color='black')),
+    hoverlabel=dict(font_color='black')
 )
 
 # Agregar etiqueta de datos
-fig.update_traces(text=df['Venta'], textposition='top center')
+fig.update_traces(textposition='top center')
 
-# Customizar el gráfico con colores UI/UX
-#fig.update_traces(line=dict(color='blue', width=2))
 
 # Mostrar el gráfico en Streamlit
 st.plotly_chart(fig)
