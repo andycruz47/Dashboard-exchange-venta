@@ -44,8 +44,27 @@ monthsSelected = [list(nameMonths.keys())[list(nameMonths.values()).index(m)] fo
 # Filtrar el DataFrame según los filtros seleccionados
 df_filtrado = df[(df['Año'] == yearSelected) & (df['Mes'].isin(monthsSelected))]
 
+# Ultimo día
+lastDate = df['Fecha'].iloc[-1]
+lastValue = df['Venta'].iloc[-1]
+
 # Crear el gráfico de líneas
-fig = px.line(df_filtrado, x='Fecha', y='Venta', title='Tipo Cambio USD', labels={'Fecha':'Fecha','Venta':'Exchange'}, markers=True, text='Venta', hover_data={'Fecha':True, 'Venta':False})
+fig = px.line(df_filtrado, x='Fecha', y='Venta', title='Tipo Cambio USD', labels={'Fecha':'Fecha','Venta':'Exchange'}, markers=True, hover_name='Venta', hover_data={'Venta':False, 'Fecha':True})
+
+fig.add_annotation(
+    x=lastDate,
+    y=lastValue,
+    text=lastValue,
+    showarrow=True,
+    arrowhead=2,
+    ax=0,
+    ay=-30,
+    font=dict(
+        color="black",
+        size=12
+    ),
+    bgcolor="white"
+)
 
 # Customizar el gráfico con un tema claro
 fig.update_layout(

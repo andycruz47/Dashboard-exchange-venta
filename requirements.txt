@@ -4,3 +4,5 @@ dash
 plotly
 requests
 streamlit
+#BeautifulSoup4
+#lxml
