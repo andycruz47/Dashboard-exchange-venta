@@ -4,5 +4,6 @@ env/
 .venv/
 .virtualenv/
 .venv
+chrome-headless-shell-win64/
 *.pyc
 token.txt
