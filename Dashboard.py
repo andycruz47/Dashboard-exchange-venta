@@ -1,18 +1,10 @@
 import pandas as pd
 import streamlit as st
-from concurrent.futures import ThreadPoolExecutor
 import plotly.express as px
 from datetime import datetime
 from ImportDataFromApi import getData
 from ImportDataTuCambista import getExchangeTuCambista
 
-# Ejecutar la operación costosa en segundo plano
-#executor = ThreadPoolExecutor(2)
-
-# Mostrar Tipo Cambio TuCambista
-#url = 'https://tucambista.pe/'
-
-#future = executor.submit(getExchangeTuCambista,url)
 
 # Obtener el año y mes actual
 currentYear = datetime.now().year
@@ -91,20 +83,16 @@ fig.update_layout(
 # Agregar etiqueta de datos
 fig.update_traces(textposition='top center')
 
-#st.markdown(exchangeTuCambista)
 
 col1, col2 = st.columns(2)
 
-#card_tuCambista = """
-#<div style="background-color: #FFEB3B; padding: 5px; border-radius: 10px; text-align: center;">
-#    <iframe src="https://tucambista.pe/tipo-de-cambio?igu=1" frameborder=0>$TuCambista</iframe>
-#</div>
-#"""
+exchangeTuCambista = getExchangeTuCambista()['Venta']
 
-card_tuCambista = """
-<div style="background-color: #FFEB3B; padding: 5px; border-radius: 10px; text-align: center;">
-    <h3 style="color: black; padding: 5px;">$TuCambista</h3>
-    <p style="color: black; font-size: 20px; padding: 5px; margin: 0px;">loading...</p>
+
+card_tuCambista = f"""
+<div style="background-color: #FFF078; padding: 5px; border-radius: 10px; text-align: center;">
+   <h3 style="color: #0F0F0F; padding: 5px;">$TuCambista</h3>
+    <p style="color: black; font-size: 20px; padding: 5px; margin: 0px;">Hoy: $ {exchangeTuCambista}</p>
 </div>
 """
 
@@ -112,14 +100,13 @@ card_tuCambista = """
 lastValue = df['Venta'].iloc[-1]
 
 card_SBS = f"""
-<div style="background-color: #2196F3; padding: 5px; border-radius: 10px; text-align: center;">
-    <h3 style="color: black; padding: 5px;">SBS</h3>
-    <p style="color: black; font-size: 20px; padding: 5px; margin: 0px;">$ {lastValue}</p>
+<div style="background-color: #6EACDA; padding: 5px; border-radius: 10px; text-align: center;">
+    <h3 style="color: #0F0F0F; padding: 5px;">SBS</h3>
+    <p style="color: black; font-size: 20px; padding: 5px; margin: 0px;">Hoy: $ {lastValue}</p>
 </div>
 """
 with col1:
-    card_tuCambista_placeholder = st.empty()
-    card_tuCambista_placeholder.markdown(card_tuCambista, unsafe_allow_html=True)
+    st.markdown(card_tuCambista, unsafe_allow_html=True)
 
 with col2:
     st.markdown(card_SBS, unsafe_allow_html=True)
@@ -130,21 +117,6 @@ st.plotly_chart(fig)
 
 #Firma
 st.markdown("Developed by Andy Cruz")
-
-# Mostrar el resultado de la operación costosa una vez completada
-exchangeTuCambista = "$ 3.736"
-#exchangeTuCambista = "$ " + str(future.result())
-
-card_tuCambista = f"""
-<div style="background-color: #FFEB3B; padding: 5px; border-radius: 10px; text-align: center;">
-   <h3 style="color: black; padding: 5px;">$TuCambista</h3>
-    <p style="color: black; font-size: 20px; padding: 5px; margin: 0px;">{exchangeTuCambista}</p>
-</div>
-"""
-
-# Actualizamos el card de TuCambista
-with col1:
-    card_tuCambista_placeholder.markdown(card_tuCambista, unsafe_allow_html=True)
 
 
 #st.caption("Developed by Andy Cruz")

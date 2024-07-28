@@ -3,7 +3,6 @@ import logging
 import requests
 
 
-
 class ApisNetPe:
 
     #BASE_URL = "https://api.apis.net.pe"
