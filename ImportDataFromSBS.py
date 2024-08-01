@@ -43,7 +43,7 @@ def savetoCSV(currentYear, currentMonth):
 #print(getDataEUR(2024, 8))
 #showExchange(exchanges)
 #savetoCSV(2024,8)
-print(api_consultas.get_exchange_rate_for_month(2024, 7))
+#print(api_consultas.get_exchange_rate_for_month(2024, 7))
 #print(getExchange(2024, 7))
 
 

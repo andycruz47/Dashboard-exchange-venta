@@ -12,8 +12,8 @@ currentYear = datetime.now().year
 currentMonth = datetime.now().month
 lastMonth = currentMonth - 1
 
-dfUSD = getDataUSD(currentYear, currentMonth)
 dfEUR = getDataEUR(currentYear, currentMonth)
+dfUSD = getDataUSD(currentYear, currentMonth)
 
 # Convertir la columna Fecha a formato datetime
 dfUSD['Fecha'] = pd.to_datetime(dfUSD['Fecha'])
