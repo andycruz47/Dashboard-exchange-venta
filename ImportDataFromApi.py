@@ -1,9 +1,7 @@
 from apis_net_pe import ApisNetPe
 import pandas as pd
+from time import sleep
 from datetime import timedelta
-import time
-import csv
-
 
 BASE_URL = "https://api.apis.net.pe"
 
@@ -29,63 +27,30 @@ def getExchange(year, month):
     # Modificar cada diccionario en la lista
     return [{newKeys.get(k, k): v for k, v in d.items() if k in keys} for d in exchanges]
 
-
-def showExchange(exchanges):
-    for exchange in exchanges:
-        Fecha = exchange['fecha']
-        Currency = exchange['moneda']
-        TCVenta = exchange['precioVenta']
-        print(f'Fecha: {Fecha}')
-        print(f'Moneda: {Currency}')
-        print(f'Venta: {TCVenta}')
-        print('--------')
-
-
-def savetoCSV(exchanges, month, year):
-    nameCSV = f'exchange {month}-{year}.csv'
-
-    with open(nameCSV, mode='w', newline='') as fileCSV:
-        writer = csv.writer(fileCSV)
-
-        writer.writerow(['Fecha', 'Moneda', 'Venta'])
-        
-        for exchange in exchanges:
-            Fecha = exchange['fecha']
-            Currency = exchange['moneda']
-            TCVenta = exchange['precioVenta']
-            writer.writerow([Fecha, Currency, TCVenta])
-
-    print(f"Datos guardados en {nameCSV}")
-
-
-def getData(currentYear, currentMonth, lastMonth):
+def getDataUSD(currentYear, currentMonth):
     # Leer el archivo CSV en un DataFrame
-    df = pd.read_csv('exchangeHistory.csv')
+    df = pd.read_csv('exchangeHistoryUSD.csv')
+    # Espera 1 segundo
+    sleep(1)
     # Consulta a la API
     currentExchanges = getExchange(currentYear, currentMonth)
     # Convertir la lista de diccionarios en un DataFrame
-    dfCurrentExchanges= pd.DataFrame(currentExchanges)
-    # Sleep
-    time.sleep(1)
-    # Consulta a la API
-    lastExchanges = getExchange(currentYear, lastMonth)
-    # Convertir la lista de diccionarios en un DataFrame
-    dfLastExchanges= pd.DataFrame(lastExchanges)
-    dfNewExchanges = pd.concat([dfLastExchanges, dfCurrentExchanges], ignore_index=True)
-    #Convertir a fecha la columna Fecha
-    dfNewExchanges['Fecha'] = pd.to_datetime(dfNewExchanges['Fecha'])
-    #Eliminar primera fila
-    dfNewExchanges = dfNewExchanges.drop(index=0)
-    #Restar un dia a la fecha nueva
-    dfNewExchanges['Fecha'] = dfNewExchanges['Fecha'] - timedelta(days=1)
+    dfcurrentExchanges= pd.DataFrame(currentExchanges)
+    # Convertir a fecha la columna Fecha
+    dfcurrentExchanges['Fecha'] = pd.to_datetime(dfcurrentExchanges['Fecha']).dt.date
+    # Restar un dia a la fecha nueva
+    dfcurrentExchanges['Fecha'] = dfcurrentExchanges['Fecha'] - timedelta(days=1)
     # Concatenar el DataFrame del CSV con el DataFrame nuevo
-    return pd.concat([df, dfNewExchanges], ignore_index=True)
+    return pd.concat([df, dfcurrentExchanges], ignore_index=True)
 
+def savetoCSV(currentYear, currentMonth):
+    getDataUSD(currentYear, currentMonth).to_csv('ExchangeHistoryUSD.csv', index=False)
+    print(f"Datos guardados en ExchangeHistoryUSD")
 
-#print(getExchange(month, year))
-#exchanges = api_consultas.get_exchange_rate_for_month(year=year, month=month)
+#print(pd.DataFrame(getExchange(2024, 7)))
+#print(getDataUSD(2024, 8))
 #showExchange(exchanges)
-#savetoCSV(exchanges, month, year)
-#print(getData(2024, 7))
+#savetoCSV(2024,8)
+#print(getDataUSD(2024, 7))
 
 

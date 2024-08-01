@@ -2,7 +2,8 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from datetime import datetime
-from ImportDataFromApi import getData
+from ImportDataFromApi import getDataUSD
+from ImportDataFromSBS import getDataEUR
 from ImportDataTuCambista import getExchangeTuCambista
 
 
@@ -11,11 +12,15 @@ currentYear = datetime.now().year
 currentMonth = datetime.now().month
 lastMonth = currentMonth - 1
 
-#df = pd.read_csv('exchangeHistory.csv')
-df = getData(currentYear, currentMonth, lastMonth)
+dfUSD = getDataUSD(currentYear, currentMonth)
+dfEUR = getDataEUR(currentYear, currentMonth)
 
 # Convertir la columna Fecha a formato datetime
-df['Fecha'] = pd.to_datetime(df['Fecha'])
+dfUSD['Fecha'] = pd.to_datetime(dfUSD['Fecha'])
+dfEUR['Fecha'] = pd.to_datetime(dfEUR['Fecha'])
+
+# Concatenamos los Df
+df = pd.concat([dfUSD, dfEUR], ignore_index=True)
 
 # Agregar columnas de Año y Mes
 df['Año'] = df['Fecha'].dt.year
@@ -28,12 +33,13 @@ nameMonths = {
 }
 
 # Título del dashboard
-st.title('Tipo Cambio SBS USD Venta')
+st.title('Tipo Cambio SBS Venta')
 
-# Filtros de año y mes
+# Filtros de año, mes y moneda
 years = df['Año'].unique()
 months = df['Mes'].unique()
 nameMonthsFiltred = [nameMonths[m] for m in months]
+currency = df['Moneda'].unique()
 
 # Definir los valores predeterminados para los filtros
 #defaultMonthsSelected = [nameMonths[currentMonth], nameMonths[lastMonth]]
@@ -43,11 +49,14 @@ yearSelected = st.selectbox('Selecciona un año:', sorted(years), index=list(yea
 monthsNameSelected = st.multiselect('Selecciona meses:', nameMonthsFiltred, default=defaultMonthSelected)
 monthsSelected = [list(nameMonths.keys())[list(nameMonths.values()).index(m)] for m in monthsNameSelected]
 
+# Moneda
+currencySelected = st.radio('Moneda:', options=currency, index=0)
+
 # Filtrar el DataFrame según los filtros seleccionados
-df_filtrado = df[(df['Año'] == yearSelected) & (df['Mes'].isin(monthsSelected))]
+df_filtrado = df[(df['Año'] == yearSelected) & (df['Mes'].isin(monthsSelected)) & (df['Moneda'] == currencySelected)]
 
 # Crear el gráfico de líneas
-fig = px.line(df_filtrado, x='Fecha', y='Venta', title='Tipo Cambio USD', labels={'Fecha':'Fecha','Venta':'Exchange'}, markers=True, hover_name='Venta', hover_data={'Venta':False, 'Fecha':True})
+fig = px.line(df_filtrado, x='Fecha', y='Venta', title=f'Tipo Cambio {currencySelected}', labels={'Fecha':'Fecha','Venta':'Exchange'}, markers=True, hover_name='Venta', hover_data={'Venta':False, 'Fecha':True})
 
 if not df_filtrado.empty:
     # Ultimo día
@@ -83,7 +92,6 @@ fig.update_layout(
 # Agregar etiqueta de datos
 fig.update_traces(textposition='top center')
 
-
 col1, col2 = st.columns(2)
 
 exchangeTuCambista = getExchangeTuCambista()['Venta']
@@ -96,8 +104,8 @@ card_tuCambista = f"""
 </div>
 """
 
-# Tipo Cambio SBS al dia de Hoy
-lastValue = df['Venta'].iloc[-1]
+#  Ultimo valor Venta SBS
+lastValue = df[df['Moneda'] == currencySelected]['Venta'].iloc[-1]
 
 card_SBS = f"""
 <div style="background-color: #6EACDA; padding: 5px; border-radius: 10px; text-align: center;">

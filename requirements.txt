@@ -1,6 +1,6 @@
 pandas
 numpy
-dash
 plotly
 requests
 streamlit
+BeautifulSoup4
