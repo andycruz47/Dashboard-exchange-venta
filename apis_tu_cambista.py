@@ -34,6 +34,6 @@ class ApisTuCambista:
             logging.warning(f"{response.url} - Server Error status_code={response.status_code}")
         return None
 
-
+#https://tucambista.pe/_next/data/nnX6__VnUABVLb5gAY5K_/index.json
     def get_exchange_rate_today(self) -> dict:
-        return self._get("_next/data/kX9sA_jh8ruDchdjxN0xc/index.json", {})
+        return self._get("_next/data/nnX6__VnUABVLb5gAY5K_/index.json", {})

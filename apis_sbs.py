@@ -3,6 +3,7 @@ from typing import List
 import logging
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 
 class ApiSBS:
@@ -29,7 +30,9 @@ class ApiSBS:
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             table = soup.find('table')
-            return response.text
+            df = pd.read_html(str(table))[0]
+            json = df.to_json(orient='records')
+            return json
         elif response.status_code == 422:
             logging.warning(f"{response.url} - invalida parameter")
             logging.warning(response.text)
@@ -45,6 +48,6 @@ class ApiSBS:
 
     def get_exchange_rate_for_month(self, currentYear: int, currentMonth: int) -> List[dict]:
         dateInitial = date(currentYear, currentMonth, 1).strftime("%d/%m/%Y")
-        dateFinal = date(currentYear, currentMonth, datetime.now().day).strftime("%d/%m/%Y")
+        dateFinal = date(currentYear, currentMonth, 31).strftime("%d/%m/%Y")
         return self._get("/app/stats/seriesH-tipo_cambio_moneda_excel.asp", {"fecha1": dateInitial, "fecha2": dateFinal, "moneda": "66"})
         #return dateInitial, dateFinal

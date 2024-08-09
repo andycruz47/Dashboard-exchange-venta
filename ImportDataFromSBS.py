@@ -15,6 +15,7 @@ def getExchange(currentYear, currentMonth):
     # Modificar cada diccionario en la lista
     return [{newKeys.get(k, k): v for k, v in d.items() if k in keys} for d in exchanges]
 
+
 def getDataEUR(currentYear, currentMonth):
     df = pd.read_csv('exchangeHistoryEUR.csv')
     return df
@@ -33,7 +34,6 @@ def getDataEUR(currentYear, currentMonth):
     # Concatenar el DataFrame del CSV con el DataFrame nuevo
     return pd.concat([df, dfcurrentExchanges], ignore_index=True)
 '''
-
 def savetoCSV(currentYear, currentMonth):
     getDataEUR(currentYear, currentMonth).to_csv('ExchangeHistoryUSD.csv', index=False)
     print(f"Datos guardados en ExchangeHistoryUSD")
